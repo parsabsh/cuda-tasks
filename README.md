@@ -45,7 +45,7 @@ In this approach, we have one block for each outer product, which means we have 
 
 We use `nvcc` to compile our CUDA programs. In order to test the functionality of our codes, we use matrices A(3x1000) and B(1000x4) so that the output C is 3x4.
 
-![Screenshot from 2023-09-04 17-36-25](https://github.com/parsabsh/cuda-tasks/assets/92635013/9872669d-e398-4660-bcc5-d9da4f73fb32)
+![Screenshot from 2023-09-04 17-36-25](https://github.com/parsabsh/cuda-tasks/assets/92635013/08b843e0-8bf7-4ff8-a9b6-1ab72eb654b7)
 
 ### Profiling
 
