@@ -1,4 +1,4 @@
-# cuda tasks
+# CUDA tasks
 
 ## Task 1: Implement matrix multiplication in two different approaches
 
@@ -45,7 +45,7 @@ In this approach, we have one block for each outer product, which means we have 
 
 We use `nvcc` to compile our CUDA programs. In order to test the functionality of our codes, we use matrices A(3x1000) and B(1000x4) so that the output C is 3x4.
 
-![Screenshot from 2023-09-04 17-36-25](https://github.com/parsabsh/cuda-test/assets/92635013/0a5cb5e5-8a73-4fe0-931d-6aa672c8b58f)
+![Screenshot from 2023-09-04 17-36-25](https://github.com/parsabsh/cuda-tasks/assets/92635013/9872669d-e398-4660-bcc5-d9da4f73fb32)
 
 ### Profiling
 
