@@ -22,9 +22,6 @@ __global__ void matmul_outerprod(float* A, float* B, float* C) {
 }
 
 int main() {
-    // int M = 3;
-    // int N = 10000;
-    // int P = 4;
     float *A = (float*) malloc(M*N*sizeof(float));
     float *B = (float*) malloc(N*P*sizeof(float));
     float *C = (float*) malloc(M*P*sizeof(float));
@@ -52,7 +49,7 @@ int main() {
     //! for debugging [begin]
     // printf("C\n");
     // print_matrix(C, M, P);
-    //! end for debugging [end]
+    //! for debugging [end]
     printf(check_matmul(A, B, C, M, N, P) ? "Test PASSED\n" : "Test FAILED\n");
     return 0;
 }

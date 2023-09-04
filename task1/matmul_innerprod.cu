@@ -40,7 +40,7 @@ int main() {
     //! for debugging [begin]
     // printf("C\n");
     // print_matrix(C, M, P);
-    //! end for debugging [end]
+    //! for debugging [end]
     printf(check_matmul(A, B, C, M, N, P) ? "Test PASSED\n" : "Test FAILED\n");
     return 0;
 }
