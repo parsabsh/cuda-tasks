@@ -135,7 +135,7 @@ The main idea to parallelize this algorithm is to relax all the edges in paralle
 
 #### First Challenge
 
-I first tried using `__syncthreads()` at the end of each iteration and call the kernel just once. But it turns out that `__syncthreads()` just synchronizes threads in a block, not all the threads in the grid.
+I first tried to use `__syncthreads()` at the end of each iteration and call the kernel just once. But it turns out that `__syncthreads()` just synchronizes threads in a block, not all the threads in the grid.
 
 **Solution:** To solve this challenge, we have to control the sequential part of the algorithm in the host. So we call the kernel function $|V| - 1$ times in a loop in the host. This will force all threads to be synchronized after each iteration.
 
@@ -154,9 +154,9 @@ typedef struct Graph {
 } Graph;
 ```
 
-This just works fine until the step in which we want to copy the graph from the host to the device. If we just copy the `Graph` struct, the array in it (`edges`) doesn't get copied.
+This works fine until the step in which we want to copy the graph from the host to the device. If we just copy the `Graph` struct, the array in it (`edges`) doesn't get copied.
 
-**Solution:** To copy a `Graph` struct, we need to copy the `edges` array independently. In order to fix this problem, I used [this answer in StackOverflow](https://stackoverflow.com/questions/15431365/cudamemcpy-segmentation-fault/15435592#15435592), in which we use a temporary pointer and use it to allocate a space for the `edges` array in the device. Then we copy its *pointer value* from the host into `&(graph_dev->edge)` in the device. At the end we can copy the whole array from the host (`graph->edges`) to the device (temporary pointer).
+**Solution:** To copy a `Graph` struct, we must copy the `edges` array independently. In order to fix this problem, I used [this answer in StackOverflow](https://stackoverflow.com/questions/15431365/cudamemcpy-segmentation-fault/15435592#15435592), in which we use a temporary pointer and use it to allocate space for the `edges` array in the device. Then we copy its *pointer value* from the host into `&(graph_dev->edge)` in the device. At the end, we can copy the whole array from the host (`graph->edges`) to the device (temporary pointer).
 
 #### Improvement
 
@@ -167,10 +167,13 @@ We don't always need to iterate $|V| - 1$ times. We define a variable `bool chan
 In the `data` directory, there are three files:
 
 1. `USA-road-d.CAL.gr`: a huge graph with only positive edges.
-2. `small graph.gr`: a simple graph to test the program functionallity:
-   ![small graph](task2/images/small-graph.png)
-3. `neg cycle.gr`: a simple graph to test the program ability to detect negative cycles.
-   ![neg cycle](task2/images/neg-cycle.png)
+2. `small graph.gr`: a simple graph to test the program functionality:
+
+![small graph](task2/images/small-graph.png)
+
+3. `neg cycle.gr`: a simple graph to test the program's ability to detect negative cycles.
+   
+![neg cycle](task2/images/neg-cycle.png)
 
 ### Notes
 
