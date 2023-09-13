@@ -33,7 +33,7 @@ __global__ void bellman_ford_one_iteration(Graph *graph, int *dist, bool *change
     int w = edge.weight;
 
     if (dist[u] + w < dist[v]) {
-        printf("edge %d relaxed with source %d, dest %d and weight %d\n", edge_index, u, v, w); //! for debugging
+        // printf("edge %d relaxed with source %d, dest %d and weight %d\n", edge_index, u, v, w); //! for debugging
         dist[v] = dist[u] + w;
         *changed = true;
     }
@@ -52,7 +52,7 @@ int main() {
     graph->E = stoi(line.substr(line.find(" ")));
     graph->edges = (Edge *) malloc(graph->E * sizeof(Edge));
     read_graph(graph, file);
-    print_graph_brief(graph); //! for debugging
+    // print_graph_brief(graph); //! for debugging
 
     // the distance array stores distances from vertex 0 to each vertex
     int *dist = (int*) malloc(graph->V * sizeof(int));

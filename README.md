@@ -171,3 +171,9 @@ In the `data` directory, there are three files:
    ![small graph](task2/images/small-graph.png)
 3. `neg cycle.gr`: a simple graph to test the program ability to detect negative cycles.
    ![neg cycle](task2/images/neg-cycle.png)
+
+### Notes
+
+- The input files conatain one-based numbering for vertices (the source vertex is $1$), but we use zero-based numbering. So in the lines 110 and 111, we first decrement the inputs and then we store them.
+- There are some auxilary functions to print the graph and the distance array, called `print_graph` and `print_dist` respectively. These functions has a shorter format called `print_graph_brief` and `print_dist_brief` respectively. These two functions only prints the first and last 5 elements.
+- Some lines are commented by `//! for debugging` which can be uncommented for debugging purposes.
