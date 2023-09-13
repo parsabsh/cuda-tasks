@@ -122,3 +122,4 @@ Test PASSED
                     0.00%     808ns         1     808ns     808ns     808ns  cuModuleGetLoadingMode
                     0.00%     489ns         1     489ns     489ns     489ns  cuDeviceGetUuid
 ```
+
