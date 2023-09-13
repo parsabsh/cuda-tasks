@@ -45,7 +45,7 @@ In this approach, we have one block for each outer product, which means we have 
 
 We use `nvcc` to compile our CUDA programs. In order to test the functionality of our codes, we use matrices A(3x1000) and B(1000x4) so that the output C is 3x4.
 
-![Screenshot from 2023-09-04 17-36-25](https://github.com/parsabsh/cuda-tasks/assets/92635013/08b843e0-8bf7-4ff8-a9b6-1ab72eb654b7)
+![run](task1/images/run.png)
 
 ### Profiling
 
@@ -123,3 +123,51 @@ Test PASSED
                     0.00%     489ns         1     489ns     489ns     489ns  cuDeviceGetUuid
 ```
 
+## Task 2: Parallel Bellman-Ford Algorithm
+
+In this task, we aim to implement the Bellman-Ford algorithm (which is a single source shortest path(SSSP) algorithm to find the shortest path from a source vertex to every other vertex) in CUDA using a parallel approach.
+
+**How it works:** In this algorithm, assuming that we have a graph $G(V, E)$ we should relax all edges $|V| - 1$ times. If the graph has no negative cycle, in this stage we have the correct answer. To check for a negative cycle, we do the relaxation one more time. If any distance is changed, then there is a negative cycle.
+
+### Main Idea
+
+The main idea to parallelize this algorithm is to relax all the edges in parallel in each iteration. In order to achieve this, we assign each thread to one edge in the graph. At the end of each iteration, we should synchronize all the threads.
+
+#### First Challenge
+
+I first tried using `__syncthreads()` at the end of each iteration and call the kernel just once. But it turns out that `__syncthreads()` just synchronizes threads in a block, not all the threads in the grid.
+
+**Solution:** To solve this challenge, we have to control the sequential part of the algorithm in the host. So we call the kernel function $|V| - 1$ times in a loop in the host. This will force all threads to be synchronized after each iteration.
+
+#### Second Challenge
+
+I used the following `struct` to store the graph:
+
+```c
+typedef struct Edge {
+    int src, dst, weight;
+} Edge;
+
+typedef struct Graph {
+    int V, E;
+    Edge* edges;
+} Graph;
+```
+
+This just works fine until the step in which we want to copy the graph from the host to the device. If we just copy the `Graph` struct, the array in it (`edges`) doesn't get copied.
+
+**Solution:** To copy a `Graph` struct, we need to copy the `edges` array independently. In order to fix this problem, I used [this answer in StackOverflow](https://stackoverflow.com/questions/15431365/cudamemcpy-segmentation-fault/15435592#15435592), in which we use a temporary pointer and use it to allocate a space for the `edges` array in the device. Then we copy its *pointer value* from the host into `&(graph_dev->edge)` in the device. At the end we can copy the whole array from the host (`graph->edges`) to the device (temporary pointer).
+
+#### Improvement
+
+We don't always need to iterate $|V| - 1$ times. We define a variable `bool changed` that shows if any vertex's distance has been changed after each iteration. If there is no change in any of the graph's vertices, we can terminate the algorithm (and go for the last check for negative cycle).
+
+### Data
+
+In the `data` directory, there are three files:
+
+1. `USA-road-d.CAL.gr`: a huge graph with only positive edges.
+2. `small graph.gr`: a simple graph to test the program functionallity:
+   ![small graph](task2/images/small-graph.png)
+3. `neg cycle.gr`: a simple graph to test the program ability to detect negative cycles.
+   ![neg cycle](task2/images/neg-cycle.png)
